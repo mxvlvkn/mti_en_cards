@@ -638,6 +638,8 @@ html[data-theme="dark"] .day.is-strong i { color: #0b1f19; }
 .field input { width: 100%; border: none; background: none; outline: none; font-size: 0.9rem; color: var(--text); }
 .field input::placeholder { color: var(--muted); }
 
+.more-wrap { margin-top: 12px; }
+
 .word-list {
   border: 1px solid var(--border);
   border-radius: var(--radius);

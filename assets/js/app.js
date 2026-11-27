@@ -432,10 +432,13 @@ function viewDeck(view, params) {
     </label>
 
     <div class="word-list" id="word-list"></div>
+    <div class="more-wrap" id="more-wrap"></div>
   `;
 
   const list = $('#word-list', view);
+  const more = $('#more-wrap', view);
   const input = $('#word-search', view);
+  const PAGE = 80;
 
   const row = (card) => {
     const status = store.cardStatus(card.id);
@@ -450,24 +453,48 @@ function viewDeck(view, params) {
       </div>`;
   };
 
+  let filteredCards = cards;
+  let shown = 0;
+
+  const emptyHtml = `<div class="empty" style="border:0;padding:32px 16px">
+           <h3>Ничего не найдено</h3>
+           <p>Попробуйте другое слово.</p>
+         </div>`;
+
+  const appendChunk = () => {
+    const slice = filteredCards.slice(shown, shown + PAGE);
+    list.insertAdjacentHTML('beforeend', slice.map(row).join(''));
+    shown += slice.length;
+    const left = filteredCards.length - shown;
+    more.innerHTML = left > 0
+      ? `<button class="btn btn-ghost btn-block" type="button" data-more>Показать ещё ${left}</button>`
+      : '';
+  };
+
   const paint = (filter = '') => {
     const needle = filter.trim().toLowerCase();
-    const filtered = needle
+    filteredCards = needle
       ? cards.filter(
           (card) =>
             card.en.toLowerCase().includes(needle) || card.ru.toLowerCase().includes(needle)
         )
       : cards;
-    list.innerHTML = filtered.length
-      ? filtered.map(row).join('')
-      : `<div class="empty" style="border:0;padding:32px 16px">
-           <h3>Ничего не найдено</h3>
-           <p>Попробуйте другое слово.</p>
-         </div>`;
+    shown = 0;
+    list.innerHTML = '';
+    more.innerHTML = '';
+    if (!filteredCards.length) {
+      list.innerHTML = emptyHtml;
+      return;
+    }
+    appendChunk();
   };
 
   paint();
   input.addEventListener('input', () => paint(input.value));
+
+  more.addEventListener('click', (event) => {
+    if (event.target.closest('[data-more]')) appendChunk();
+  });
 
   list.addEventListener('click', (event) => {
     const rowNode = event.target.closest('[data-say]');
@@ -493,7 +520,7 @@ function viewStudy(view, params, query) {
   const title = deck ? deck.title : 'Все колоды';
   const practice = query.has('practice');
   const limit = practice
-    ? cards.length
+    ? Math.min(cards.length, 50)
     : Math.min(cards.length, Math.max(10, store.state.settings.dailyGoal || 20));
   const queue = store.buildQueue(cards, { limit, includeAhead: practice });
 
@@ -870,12 +897,14 @@ function viewQuiz(view, params) {
     const prompt = isEnFront ? card.en : card.ru;
     const correct = isEnFront ? card.ru : card.en;
 
-    const distractors = shuffle(pool.filter((item) => item.id !== card.id))
-      .slice(0, 3)
-      .map((item) => (isEnFront ? item.ru : item.en))
-      .filter((value) => value !== correct);
-
-    const options = shuffle([correct, ...distractors]);
+    const optionsSet = new Set([correct]);
+    for (const item of shuffle(pool)) {
+      if (optionsSet.size >= 4) break;
+      if (item.id === card.id) continue;
+      const value = isEnFront ? item.ru : item.en;
+      if (value && !optionsSet.has(value)) optionsSet.add(value);
+    }
+    const options = shuffle([...optionsSet]);
     const ipa = isEnFront && card.ipa ? `/${card.ipa}/` : '';
 
     root.innerHTML = `

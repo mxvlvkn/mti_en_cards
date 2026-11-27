@@ -1,5 +1,8 @@
 /**
- * Учебный контент. Правьте этот файл, чтобы добавить свои колоды и карточки.
+ * Учебный контент. Здесь — тематические колоды, собранные вручную.
+ * Массовые словари (A1–B2, ~3300 слов) лежат в words.js и генерируются
+ * скриптом scripts/build-words.mjs.
+ *
  * Структура карточки:
  *   id       — уникальный (используется в прогрессе, не меняйте после старта)
  *   en       — слово или фраза
@@ -10,7 +13,9 @@
  *   exampleRu— перевод примера (необязательно)
  */
 
-export const DECKS = [
+import { WORD_DECKS } from './words.js';
+
+const CURATED_DECKS = [
   {
     id: 'everyday',
     title: 'Повседневное',
@@ -116,6 +121,8 @@ export const DECKS = [
     ]
   }
 ];
+
+export const DECKS = [...WORD_DECKS, ...CURATED_DECKS];
 
 export const ALL_CARDS = DECKS.flatMap((deck) =>
   deck.cards.map((card) => ({ ...card, deckId: deck.id }))
