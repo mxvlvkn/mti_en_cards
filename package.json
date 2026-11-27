@@ -1,0 +1,14 @@
+{
+  "name": "wordly",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Wordly — английский по карточкам. Статический сайт для GitHub Pages.",
+  "scripts": {
+    "dev": "node scripts/serve.mjs",
+    "check": "node --check assets/js/app.js && node --check assets/js/store.js && node --check assets/js/data.js && node --check assets/js/sync.js && node --check assets/js/config.js"
+  },
+  "dependencies": {
+    "puppeteer-core": "^23.11.1"
+  }
+}
