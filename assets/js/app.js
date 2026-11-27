@@ -1192,10 +1192,13 @@ function viewSettings(view) {
     }
 
     if (target.hasAttribute('data-logout')) {
-      await signOut();
-      syncChrome();
-      toast('Вы вышли из аккаунта');
-      render();
+      try {
+        await signOut();
+      } finally {
+        syncChrome();
+        toast('Вы вышли из аккаунта');
+        render();
+      }
       return;
     }
 
@@ -1355,11 +1358,14 @@ function openAccount() {
       <button class="btn btn-danger" type="button" id="modal-logout">Выйти</button>`
   });
   $('#modal-logout', modal)?.addEventListener('click', async () => {
-    await signOut();
-    closeModal();
-    toast('Вы вышли из аккаунта');
-    syncChrome();
-    render();
+    try {
+      await signOut();
+    } finally {
+      closeModal();
+      toast('Вы вышли из аккаунта');
+      syncChrome();
+      render();
+    }
   });
 }
 

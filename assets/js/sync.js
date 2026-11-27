@@ -108,10 +108,20 @@ export async function signUp(email, password) {
 }
 
 export async function signOut() {
-  if (!client) return;
-  await client.auth.signOut();
-  user = null;
-  emit();
+  if (!client) {
+    user = null;
+    emit();
+    return;
+  }
+  try {
+    // Локальный выход не зависит от сети и не падает, если сессия уже истекла.
+    await client.auth.signOut({ scope: 'local' });
+  } catch (error) {
+    console.warn('[mtien] signOut', error);
+  } finally {
+    user = null;
+    emit();
+  }
 }
 
 function schedulePush() {
