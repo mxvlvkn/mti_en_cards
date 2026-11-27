@@ -9,7 +9,7 @@
 import { CONFIG, SYNC_ENABLED } from './config.js';
 import { state, saveNow } from './store.js';
 
-const SUPABASE_ESM = 'https://esm.sh/@supabase/supabase-js@2.45.4';
+const SUPABASE_ESM = 'https://esm.sh/@supabase/supabase-js@2';
 const PUSH_DEBOUNCE = 1500;
 const CHUNK = 400;
 

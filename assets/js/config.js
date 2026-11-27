@@ -15,8 +15,8 @@
  */
 export const CONFIG = {
   appName: 'Wordly',
-  supabaseUrl: '',
-  supabaseAnonKey: '',
+  supabaseUrl: 'https://rjmhtnmnlkrkyrvgiypq.supabase.co',
+  supabaseAnonKey: 'sb_publishable__7IMQevnvniAorTAEF0HLQ_5EnAVVnp',
 
   tables: {
     progress: 'card_progress',
