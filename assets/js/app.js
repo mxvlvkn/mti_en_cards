@@ -1135,15 +1135,6 @@ function viewSettings(view) {
           <button class="btn btn-ghost btn-sm" type="button" data-reset>${icon('i-trash')}Сбросить</button>
         </div>
       </div>
-
-      <div class="group">
-        <div class="row row-stack">
-          <div class="row-text">
-            <strong>О приложении</strong>
-            <small>MTIEN · статический сайт для GitHub Pages. Без авторизации прогресс хранится локально на этом устройстве; после входа — синхронизируется между устройствами.</small>
-          </div>
-        </div>
-      </div>
     </div>
   `;
 
