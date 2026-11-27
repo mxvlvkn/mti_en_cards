@@ -97,6 +97,21 @@ create policy "progress_delete_own"
   using ((select auth.uid()) = user_id);
 
 -- ----------------------------------------------------------------------------
+-- Права для Data API (PostgREST)
+-- Сайт ходит с публичным anon-ключом, но данные доступны только роли
+-- authenticated и только свои строки — благодаря политикам выше.
+-- Эти grant'ы не зависят от галочек в дашборде Supabase.
+-- ----------------------------------------------------------------------------
+
+grant usage on schema public to anon, authenticated;
+
+revoke all on public.profiles from anon;
+revoke all on public.card_progress from anon;
+
+grant select, insert, update on public.profiles to authenticated;
+grant select, insert, update, delete on public.card_progress to authenticated;
+
+-- ----------------------------------------------------------------------------
 -- Профиль создаётся автоматически при регистрации
 -- ----------------------------------------------------------------------------
 
