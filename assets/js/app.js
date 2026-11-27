@@ -1034,9 +1034,6 @@ function viewStats(view) {
 function viewSettings(view) {
   const settings = store.state.settings;
   const user = currentUser();
-  const storageNote = user
-    ? 'Прогресс сохраняется в аккаунте и дублируется в этом браузере. Копия пригодится для ручного переноса данных.'
-    : 'Вы не авторизованы: прогресс хранится только в этом браузере. Сохраните копию, чтобы не потерять его при очистке данных.';
 
   view.innerHTML = `
     <div class="page-head">
@@ -1055,8 +1052,8 @@ function viewSettings(view) {
               isSyncEnabled()
                 ? user
                   ? esc(user.email)
-                  : 'Войдите, чтобы прогресс синхронизировался между устройствами'
-                : 'Синхронизация не настроена — прогресс хранится только в этом браузере'
+                  : 'Вы не вошли: прогресс хранится локально на этом устройстве. Войдите, чтобы синхронизировать его.'
+                : 'Прогресс хранится локально на этом устройстве — синхронизация не настроена.'
             }</small>
           </div>
           ${
@@ -1132,16 +1129,6 @@ function viewSettings(view) {
       <div class="group">
         <div class="row">
           <div class="row-text">
-            <strong>Резервная копия</strong>
-            <small>${storageNote}</small>
-          </div>
-          <div class="segmented" style="background:none;padding:0;gap:8px">
-            <button class="btn btn-ghost btn-sm" type="button" data-export>${icon('i-download')}Скачать</button>
-            <button class="btn btn-ghost btn-sm" type="button" data-import>${icon('i-upload')}Загрузить</button>
-          </div>
-        </div>
-        <div class="row">
-          <div class="row-text">
             <strong>Сбросить прогресс</strong>
             <small>Удалить все оценки и статистику. Слова останутся.</small>
           </div>
@@ -1153,20 +1140,17 @@ function viewSettings(view) {
         <div class="row row-stack">
           <div class="row-text">
             <strong>О приложении</strong>
-            <small>MTIEN · статический сайт для GitHub Pages. Работает офлайн; данные уходят на сервер только после входа в аккаунт.</small>
+            <small>MTIEN · статический сайт для GitHub Pages. Без авторизации прогресс хранится локально на этом устройстве; после входа — синхронизируется между устройствами.</small>
           </div>
         </div>
       </div>
-
-      <input type="file" id="import-file" accept="application/json,.json" hidden>
     </div>
   `;
 
-  const importInput = $('#import-file', view);
   const settingsRoot = $('.settings', view);
 
   settingsRoot.addEventListener('click', async (event) => {
-    const target = event.target.closest('[data-setting], [data-login], [data-logout], [data-sync-info], [data-toggle-speak], [data-export], [data-import], [data-reset]');
+    const target = event.target.closest('[data-setting], [data-login], [data-logout], [data-sync-info], [data-toggle-speak], [data-reset]');
     if (!target) return;
 
     if (target.dataset.setting) {
@@ -1208,16 +1192,6 @@ function viewSettings(view) {
       return;
     }
 
-    if (target.hasAttribute('data-export')) {
-      exportBackup();
-      return;
-    }
-
-    if (target.hasAttribute('data-import')) {
-      importInput.click();
-      return;
-    }
-
     if (target.hasAttribute('data-reset')) {
       openModal({
         title: 'Сбросить прогресс?',
@@ -1234,50 +1208,6 @@ function viewSettings(view) {
       });
     }
   });
-
-  importInput.addEventListener('change', async () => {
-    const file = importInput.files?.[0];
-    if (!file) return;
-    try {
-      const text = await file.text();
-      const payload = JSON.parse(text);
-      openModal({
-        title: 'Заменить прогресс?',
-        body: `<p>В файле ${Object.keys(payload.progress || {}).length} оценённых карточек. Текущий прогресс будет заменён.</p>`,
-        actions: `
-          <button class="btn btn-ghost" type="button" data-close>Отмена</button>
-          <button class="btn btn-primary" type="button" id="confirm-import">Загрузить</button>`
-      });
-      $('#confirm-import')?.addEventListener('click', () => {
-        try {
-          store.importProgress(payload);
-          closeModal();
-          toast('Прогресс загружен');
-          render();
-        } catch (error) {
-          toast(error.message, 'i-info');
-        }
-      });
-    } catch {
-      toast('Не удалось прочитать файл', 'i-info');
-    } finally {
-      importInput.value = '';
-    }
-  });
-}
-
-function exportBackup() {
-  const data = store.exportProgress();
-  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement('a');
-  link.href = url;
-  link.download = `mtien-backup-${store.dayKey()}.json`;
-  document.body.appendChild(link);
-  link.click();
-  link.remove();
-  setTimeout(() => URL.revokeObjectURL(url), 1000);
-  toast('Копия сохранена');
 }
 
 /* ------------------------------------------------------------------ */
