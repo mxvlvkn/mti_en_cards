@@ -1,6 +1,6 @@
-/* Сгенерировано scripts/build-words.mjs — не редактируйте вручную.
- * Источники: Oxford 3000 EN→RU (github.com/ascat41/Oxford3000_en-ru, MIT)
- * и Oxford 3000 by CEFR level (github.com/Kolia951/The_Oxford_3000_CEFR).
+/* Словарь Oxford 3000 (A1–B2) с русскими переводами и примерами.
+ * Источники: github.com/ascat41/Oxford3000_en-ru (MIT) и
+ * github.com/Kolia951/The_Oxford_3000_CEFR. Переводы машинные — правьте по вкусу.
  */
 export const WORD_DECKS = [
   {
