@@ -2,14 +2,13 @@
  * Необязательная синхронизация прогресса с Supabase.
  *
  * Модуль подключается только если в config.js заполнены URL и anon key.
- * Библиотека supabase-js грузится с CDN уже после этого — локальный режим
- * не делает ни одного сетевого запроса.
+ * supabase-js лежит локально в assets/vendor — без внешних CDN, работает офлайн.
  */
 
 import { CONFIG, SYNC_ENABLED } from './config.js';
 import { state, saveNow } from './store.js';
 
-const SUPABASE_ESM = 'https://esm.sh/@supabase/supabase-js@2';
+const SUPABASE_MODULE = '../vendor/supabase-js.mjs';
 const PUSH_DEBOUNCE = 1500;
 const CHUNK = 400;
 
@@ -52,7 +51,7 @@ export async function initSync() {
   if (!SYNC_ENABLED || client) return user;
 
   try {
-    const mod = await import(SUPABASE_ESM);
+    const mod = await import(SUPABASE_MODULE);
     client = mod.createClient(CONFIG.supabaseUrl, CONFIG.supabaseAnonKey, {
       auth: {
         persistSession: true,
@@ -87,9 +86,20 @@ export async function initSync() {
   return user;
 }
 
+function withTimeout(promise, ms = 12000) {
+  return Promise.race([
+    promise,
+    new Promise((_, reject) => {
+      setTimeout(() => reject(new Error('Нет связи с сервером')), ms);
+    })
+  ]);
+}
+
 export async function signIn(email, password) {
   if (!client) throw new Error('Синхронизация не настроена');
-  const { data, error } = await client.auth.signInWithPassword({ email, password });
+  const { data, error } = await withTimeout(
+    client.auth.signInWithPassword({ email, password })
+  );
   if (error) throw new Error(translate(error.message));
   user = data.user ?? null;
   emit();
@@ -99,7 +109,7 @@ export async function signIn(email, password) {
 
 export async function signUp(email, password) {
   if (!client) throw new Error('Синхронизация не настроена');
-  const { data, error } = await client.auth.signUp({ email, password });
+  const { data, error } = await withTimeout(client.auth.signUp({ email, password }));
   if (error) throw new Error(translate(error.message));
   user = data.session?.user ?? null;
   emit();

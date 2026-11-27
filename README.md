@@ -38,6 +38,7 @@ english-cards/
 ├── .github/workflows/pages.yml # автодеплой на GitHub Pages
 ├── assets/
 │   ├── css/styles.css          # все стили, токены, адаптив
+│   ├── vendor/supabase-js.mjs  # локальная сборка supabase-js (без CDN)
 │   ├── icon.svg                # иконка приложения
 │   └── js/
 │       ├── app.js              # роутер, экраны, обработчики

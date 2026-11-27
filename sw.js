@@ -2,7 +2,7 @@
  * Навигация и одноимённые файлы — network-first (свежая версия важнее),
  * остальное — stale-while-revalidate. При изменении статики поднимите VERSION.
  */
-const VERSION = 'mtien-v2';
+const VERSION = 'mtien-v3';
 
 const PRECACHE = [
   './',
@@ -15,6 +15,7 @@ const PRECACHE = [
   './assets/js/app.js',
   './assets/js/data.js',
   './assets/js/words.js',
+  './assets/vendor/supabase-js.mjs',
   './assets/js/store.js',
   './assets/js/config.js',
   './assets/js/sync.js'
