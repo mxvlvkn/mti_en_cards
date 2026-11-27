@@ -1,14 +1,16 @@
-/* Wordly service worker.
+/* MTIEN service worker.
  * Навигация и одноимённые файлы — network-first (свежая версия важнее),
  * остальное — stale-while-revalidate. При изменении статики поднимите VERSION.
  */
-const VERSION = 'wordly-v1';
+const VERSION = 'mtien-v1';
 
 const PRECACHE = [
   './',
   './index.html',
   './manifest.webmanifest',
   './assets/icon.svg',
+  './assets/fonts/roboto-cyrillic.woff2',
+  './assets/fonts/roboto-latin.woff2',
   './assets/css/styles.css',
   './assets/js/app.js',
   './assets/js/data.js',

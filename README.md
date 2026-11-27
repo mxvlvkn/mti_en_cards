@@ -1,4 +1,4 @@
-# Wordly — английский по карточкам
+# MTIEN — английский по карточкам
 
 Статический тренажёр английских слов для GitHub Pages: флеш-карточки,
 интервальные повторения, короткие тесты и статистика. Без сборки и без
@@ -111,7 +111,7 @@ node scripts/visual-check.mjs
 4. **Впишите их** в `assets/js/config.js`:
    ```js
    export const CONFIG = {
-     appName: 'Wordly',
+     appName: 'MTIEN',
      supabaseUrl: 'https://xxxx.supabase.co',
      supabaseAnonKey: 'eyJhbGciOi...',
      tables: { progress: 'card_progress', profiles: 'profiles' }

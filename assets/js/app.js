@@ -1034,6 +1034,9 @@ function viewStats(view) {
 function viewSettings(view) {
   const settings = store.state.settings;
   const user = currentUser();
+  const storageNote = user
+    ? 'Прогресс сохраняется в аккаунте и дублируется в этом браузере. Копия пригодится для ручного переноса данных.'
+    : 'Вы не авторизованы: прогресс хранится только в этом браузере. Сохраните копию, чтобы не потерять его при очистке данных.';
 
   view.innerHTML = `
     <div class="page-head">
@@ -1130,7 +1133,7 @@ function viewSettings(view) {
         <div class="row">
           <div class="row-text">
             <strong>Резервная копия</strong>
-            <small>Прогресс хранится в этом браузере. Сохраните копию, чтобы не потерять его при очистке данных.</small>
+            <small>${storageNote}</small>
           </div>
           <div class="segmented" style="background:none;padding:0;gap:8px">
             <button class="btn btn-ghost btn-sm" type="button" data-export>${icon('i-download')}Скачать</button>
@@ -1150,7 +1153,7 @@ function viewSettings(view) {
         <div class="row row-stack">
           <div class="row-text">
             <strong>О приложении</strong>
-            <small>Wordly · статический сайт для GitHub Pages. Работает офлайн, данные не уходят на сервер, пока не включена синхронизация.</small>
+            <small>MTIEN · статический сайт для GitHub Pages. Работает офлайн; данные уходят на сервер только после входа в аккаунт.</small>
           </div>
         </div>
       </div>
@@ -1269,7 +1272,7 @@ function exportBackup() {
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
   link.href = url;
-  link.download = `wordly-backup-${store.dayKey()}.json`;
+  link.download = `mtien-backup-${store.dayKey()}.json`;
   document.body.appendChild(link);
   link.click();
   link.remove();

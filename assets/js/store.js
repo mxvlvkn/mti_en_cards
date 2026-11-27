@@ -310,7 +310,7 @@ export function resetProgress() {
 
 export function exportProgress() {
   return {
-    app: 'wordly',
+    app: 'mtien',
     version: 1,
     exportedAt: new Date().toISOString(),
     settings: state.settings,
@@ -321,7 +321,7 @@ export function exportProgress() {
 
 export function importProgress(payload) {
   if (!payload || typeof payload !== 'object' || !payload.progress) {
-    throw new Error('Файл не похож на резервную копию Wordly');
+    throw new Error('Файл не похож на резервную копию MTIEN');
   }
   const progress = {};
   for (const [cardId, entry] of Object.entries(payload.progress)) {

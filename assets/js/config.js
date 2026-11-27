@@ -14,7 +14,7 @@
  * сюда вставлять НЕЛЬЗЯ ни при каких условиях.
  */
 export const CONFIG = {
-  appName: 'Wordly',
+  appName: 'MTIEN',
   supabaseUrl: 'https://rjmhtnmnlkrkyrvgiypq.supabase.co',
   supabaseAnonKey: 'sb_publishable__7IMQevnvniAorTAEF0HLQ_5EnAVVnp',
 
